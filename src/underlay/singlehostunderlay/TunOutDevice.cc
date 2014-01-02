@@ -31,6 +31,7 @@ Define_Module(TunOutDevice);
 
 #include <netinet/ip.h>
 #include <netinet/udp.h>
+#include "TCPIPchecksum.h"
 
 char* TunOutDevice::encapsulate(cPacket *msg,
                                 unsigned int* length,
@@ -120,7 +121,7 @@ char* TunOutDevice::encapsulate(cPacket *msg,
     pseudohdr->lenght = udp_buf->len;
 
     // compute UDP checksum
-    udp_buf->check = cksum((uint16_t*) pseudohdr, sizeof(struct udppseudohdr) + udplen + payloadlen);
+    udp_buf->check = TCPIPchecksum::checksum((void*) pseudohdr, sizeof(struct udppseudohdr) + udplen + payloadlen);
 
     // write ip header to begin of buffer
     ip_buf = (iphdr*) buf;
@@ -135,7 +136,7 @@ char* TunOutDevice::encapsulate(cPacket *msg,
     ip_buf->saddr = saddr;
     ip_buf->daddr = daddr;
     ip_buf->check = 0;
-    ip_buf->check = cksum((uint16_t*) ip_buf, iplen);
+    ip_buf->check = TCPIPchecksum::checksum((void*) ip_buf, iplen);
 
     delete IP;
     delete UDP;
