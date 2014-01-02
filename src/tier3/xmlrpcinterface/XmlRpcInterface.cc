@@ -735,7 +735,9 @@ void XmlRpcInterface::handleAppTunPacket(char *buf, uint32_t length)
     }
     destKey = destKey << (OverlayKey::getLength() - 100);
 
-    p2pns->tunnel(destKey, BinaryValue(buf, length));
+
+    char* aux = (char*)length;
+    p2pns->tunnel(destKey, BinaryValue(buf, aux));
 #endif
 }
 
