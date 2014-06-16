@@ -98,6 +98,7 @@ void BaseOverlay::initialize(int stage)
         appGate = gate("appIn");
 
         // fetch some parameters
+        overlayId = par("overlayId");
         debugOutput = par("debugOutput");
         collectPerHopDelay = par("collectPerHopDelay");
         localPort = par("localPort");
