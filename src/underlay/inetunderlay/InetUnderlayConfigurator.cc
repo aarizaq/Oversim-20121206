@@ -405,7 +405,7 @@ void InetUnderlayConfigurator::setUpIPv4(cTopology &topo)
             defRoute->setGateway(IPv4Address(par("gatewayIP").stringValue()));
             defRoute->setInterface(IPvXAddressResolver().interfaceTableOf(destNode->getModule())->getInterfaceByName("tunDev"));
             //defRoute->setType(IPv4Route::REMOTE);
-            defRoute->setSource(IPv4Route::MANUAL);
+            defRoute->setSourceType(IPv4Route::MANUAL);
             IPvXAddressResolver().routingTableOf(destNode->getModule())->addRoute(defRoute);
 
             IPv4Route* gwRoute = new IPv4Route();
@@ -413,7 +413,7 @@ void InetUnderlayConfigurator::setUpIPv4(cTopology &topo)
             gwRoute->setNetmask(IPv4Address(255, 255, 255, 255));
             gwRoute->setInterface(IPvXAddressResolver().interfaceTableOf(destNode->getModule())->getInterfaceByName("tunDev"));
             //gwRoute->setType(IPv4Route::DIRECT);
-            gwRoute->setSource(IPv4Route::MANUAL);
+            gwRoute->setSourceType(IPv4Route::MANUAL);
             IPvXAddressResolver().routingTableOf(destNode->getModule())->addRoute(gwRoute);
         }
 
@@ -455,7 +455,7 @@ void InetUnderlayConfigurator::setUpIPv4(cTopology &topo)
             IPv4Address mask(255,255,0,0);
             re->setDestination(IPv4Address(destAddr & mask.getInt()));
             re->setInterface(ie);
-            re->setSource(IPv4Route::MANUAL);
+            re->setSourceType(IPv4Route::MANUAL);
             re->setNetmask(mask);
             re->setGateway(IPv4Address(next_hop_ip));
             // re->setType(IPv4Route::REMOTE);
@@ -469,7 +469,7 @@ void InetUnderlayConfigurator::setUpIPv4(cTopology &topo)
 
                 re2->setDestination(IPv4Address(destAddr));
                 re2->setInterface(ie);
-                re2->setSource(IPv4Route::MANUAL);
+                re2->setSourceType(IPv4Route::MANUAL);
                 re2->setNetmask(IPv4Address(255, 255, 255, 255));
                 // re2->setType(IPv4Route::DIRECT);
 
@@ -485,7 +485,7 @@ void InetUnderlayConfigurator::setUpIPv4(cTopology &topo)
                 defRoute->setGateway(IPv4Address(next_hop_ip));
                 defRoute->setInterface(ie);
                 // defRoute->setType(IPv4Route::REMOTE);
-                defRoute->setSource(IPv4Route::MANUAL);
+                defRoute->setSourceType(IPv4Route::MANUAL);
 
                 rt->addRoute(defRoute);
             }

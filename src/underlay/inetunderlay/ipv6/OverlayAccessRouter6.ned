@@ -155,11 +155,11 @@ module OverlayAccessRouter6
         bootstrapList.udpOut --> udp.appIn++;
         bootstrapList.udpIn <-- udp.appOut++;
 
-        udp.ipv6Out --> networkLayer.udpIn;
-        udp.ipv6In <-- networkLayer.udpOut;
+        udp.ipv6Out --> networkLayer.transportIn++;
+        udp.ipv6In <-- networkLayer.transportOut++;
 
-        tcp.ipv6Out --> networkLayer.tcpIn;
-        tcp.ipv6In <-- networkLayer.tcpOut;
+        tcp.ipv6Out --> networkLayer.transportIn++;
+        tcp.ipv6In <-- networkLayer.transportOut++;
 
         // connections to network outside
         for i=0..sizeof(pppg)-1 {

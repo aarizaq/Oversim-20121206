@@ -324,7 +324,7 @@ int ConnectReaSE::addOverlayNode(AccessInfo* overlayNode, bool migrate)
         re->setNetmask(IPv4Address::ALLONES_ADDRESS);
         re->setInterface(terminal.remoteInterfaceEntry);
         // re->setType(IPv4Route::DIRECT);
-        re->setSource(IPv4Route::MANUAL);
+        re->setSourceType(IPv4Route::MANUAL);
         overlayNode->edge->routingTable->addRoute(re);
         terminal.remoteRoutingEntry = re;
 
@@ -336,7 +336,7 @@ int ConnectReaSE::addOverlayNode(AccessInfo* overlayNode, bool migrate)
         te->setGateway(IPv4Address(overlayNode->edge->IPAddress));
         te->setInterface(terminal.interfaceEntry);
         // te->setType(IPv4Route::REMOTE);
-        te->setSource(IPv4Route::MANUAL);
+        te->setSourceType(IPv4Route::MANUAL);
         terminal.routingTable->addRoute(te);
         terminal.routingEntry = te;
 

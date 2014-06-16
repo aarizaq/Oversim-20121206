@@ -118,7 +118,7 @@ void SingleHostUnderlayConfigurator::initializeUnderlay(int stage)
     te->setGateway(gw.get4());
     te->setInterface(ifEntry);
     // te->setType(IPv4Route::REMOTE);
-    te->setSource(IPv4Route::MANUAL);
+    te->setSourceType(IPv4Route::MANUAL);
     rTable->addRoute(te);
 
     //add node to bootstrap oracle

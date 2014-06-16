@@ -136,7 +136,7 @@ void RUNetworkConfigurator::createInterASPaths()
             e->setNetmask(netmask);
             e->setInterface(ie);
             // e->setType(IPv4Route::DIRECT);
-            e->setSource(IPv4Route::MANUAL);
+            e->setSourceType(IPv4Route::MANUAL);
             srcCore.rt->addRoute(e);
 
             // re-enable all stub links
@@ -311,7 +311,7 @@ void RUNetworkConfigurator::assignAddressAndSetDefaultRoutes(nodeInfoAS &asInfo)
             e->setNetmask(IPv4Address());
             e->setInterface(mapIt->second.defaultRouteIE);
             // e->setType(IPv4Route::REMOTE);
-            e->setSource(IPv4Route::MANUAL);
+            e->setSourceType(IPv4Route::MANUAL);
             //e->setMetric(1);
             mapIt->second.rt->addRoute(e);
         }
@@ -373,7 +373,7 @@ void RUNetworkConfigurator::setIntraASRoutes(cTopology &topology, nodeInfoAS &as
                 e->setNetmask(IPv4Address());
                 e->setInterface(destNode.defaultRouteIE);
                 // e->setType(IPv4Route::REMOTE);
-                e->setSource(IPv4Route::MANUAL);
+                e->setSourceType(IPv4Route::MANUAL);
                 destNode.rt->addRoute(e);
 
                 ie = srcNode.ift->getInterfaceByNodeOutputGateId(srcNode.node->getPath(0)->getLocalGate()->getId());
@@ -382,7 +382,7 @@ void RUNetworkConfigurator::setIntraASRoutes(cTopology &topology, nodeInfoAS &as
                 e->setNetmask(IPv4Address(255, 255, 255, 255));
                 e->setInterface(ie);
                 // e->setType(IPv4Route::DIRECT);
-                e->setSource(IPv4Route::MANUAL);
+                e->setSourceType(IPv4Route::MANUAL);
                 srcNode.rt->addRoute(e);
             }
             else {
@@ -402,7 +402,7 @@ void RUNetworkConfigurator::setIntraASRoutes(cTopology &topology, nodeInfoAS &as
                         e->setNetmask(IPv4Address(255, 255, 255, 255));
                     e->setInterface(ie);
                     // e->setType(IPv4Route::DIRECT);
-                    e->setSource(IPv4Route::MANUAL);
+                    e->setSourceType(IPv4Route::MANUAL);
                     srcNode.rt->addRoute(e);
                 }
             }
