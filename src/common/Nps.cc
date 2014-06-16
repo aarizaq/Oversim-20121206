@@ -62,8 +62,7 @@ void Nps::init(NeighborCache* neighborCache)
     coordBasedRouting = CoordBasedRoutingAccess().get();
     globalNodeList = GlobalNodeListAccess().get();
 
-    if (neighborCache->getParentModule()->getModuleByRelativePath("tier1")
-        ->getModuleByRelativePath("landmark") == NULL) {
+    if (neighborCache->getParentModule()->getModuleByPath(".tier1")->getModuleByPath(".landmark") == NULL) {
         landmarkTimer = new cMessage("landmarkTimer");
         neighborCache->scheduleAt(simTime() + landmarkTimeout, landmarkTimer);
     } else {
@@ -180,7 +179,7 @@ void Nps::coordsReqRpc(CoordsReqCall* msg)
     /*} else {
         // landmark node
         Landmark* landmark = check_and_cast<Landmark*>(neighborCache->getParentModule()
-            ->getModuleByRelativePath("tier1.landmark"));
+            ->getModuleByPath(".tier1.landmark"));
         assert(landmark);
         const Coords& ownCoordinates = landmark->getOwnNpsCoords();
 
