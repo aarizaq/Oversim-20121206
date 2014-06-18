@@ -33,6 +33,7 @@ import oversim.common.IOverlay;
 import oversim.common.IPacketParser;
 import oversim.common.ITier;
 import oversim.common.NeighborCache;
+import inet.linklayer.loopback.LoopbackInterface;
 
 
 //
@@ -51,6 +52,7 @@ module SingleHost
         string appParser; // name of the PacketParser to use
         string routingFile = default("");
         bool IPForward = default(false);
+        @node;
         @display("bgb=330,461;i=device/wifilaptop_l;i2=block/circle_s");
 
     gates:
@@ -109,6 +111,9 @@ module SingleHost
                 ifIn[1];
                 ifOut[1];
         }
+        lo0: LoopbackInterface {
+            @display("p=231,354");
+        }
         outDev: <outDeviceType> like RealworldDevice {
             parameters:
                 @display("p=287,415,row,90;q=txQueue;i=block/ifcard");
@@ -126,6 +131,9 @@ module SingleHost
                 @display("p=171,415");
         }
     connections allowunconnected:
+        networkLayer.ifOut++ --> lo0.upperLayerIn;
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+
         tier1.to_lowerTier --> overlay.appIn if numTiers>0;
         tier1.from_lowerTier <-- overlay.appOut if numTiers>0;
         tier1.udpOut --> udp.appIn++ if numTiers>0;
@@ -151,8 +159,8 @@ module SingleHost
         udp.ipIn <-- networkLayer.transportOut++;
 
         // connections to network outside
-        outDev.netwOut --> networkLayer.ifIn[0];
-        outDev.netwIn <-- networkLayer.ifOut[0];
+        outDev.netwOut --> networkLayer.ifIn++;
+        outDev.netwIn <-- networkLayer.ifOut++;
 
 }
 

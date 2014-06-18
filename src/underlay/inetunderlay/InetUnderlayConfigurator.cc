@@ -307,6 +307,8 @@ void InetUnderlayConfigurator::handleTimerEvent(cMessage* msg)
     if(node == NULL)
         opp_error("IPv4UnderlayConfigurator: Trying to remove node which is nonexistant in AccessNet!");
 
+    EV << " remove node : " << node->getFullName() << "\n";
+
     node->callFinish();
     node->deleteModule();
 

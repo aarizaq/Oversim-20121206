@@ -248,6 +248,7 @@ void DHTDataStorage::updateDisplayString()
 {
     if (ev.isGUI()) {
         char buf[80];
+        memset(buf,0,sizeof(buf));
 
         if (dataMap.size() == 1) {
             sprintf(buf, "1 data item");

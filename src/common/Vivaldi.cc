@@ -155,6 +155,7 @@ AbstractNcsNodeInfo* Vivaldi::createNcsInfo(const std::vector<double>& coords) c
 void Vivaldi::updateDisplay()
 {
     char buf[60];
+    memset(buf,0,sizeof(buf));
     sprintf(buf, "xi[0]: %f xi[1]: %f ", ownCoords->getCoords(0),
             ownCoords->getCoords(1));
     neighborCache->getDisplayString().setTagArg("t", 0, buf);

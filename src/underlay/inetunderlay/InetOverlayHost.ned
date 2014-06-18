@@ -28,6 +28,7 @@ import oversim.common.CryptoModule;
 import oversim.common.IOverlay;
 import oversim.common.ITier;
 import oversim.common.NeighborCache;
+import inet.linklayer.loopback.LoopbackInterface;
 
 
 //
@@ -45,6 +46,7 @@ module InetOverlayHost
         int numTiers; // number of tiers
         string routingFile = default("");
         bool IPForward = default(false);
+        @node;
         @display("bgb=537,472;i=device/wifilaptop_l;i2=block/circle_s");
     gates:
         inout pppg[]; // gates from router
@@ -99,7 +101,10 @@ module InetOverlayHost
             gates:
                 ifIn[sizeof(pppg)+sizeof(ethg)];
                 ifOut[sizeof(pppg)+sizeof(ethg)];
-        }
+        }        
+        lo0: LoopbackInterface {
+            @display("p=78,406");
+        }        
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
                 @display("p=374,414,row,90;q=txQueue");
@@ -117,6 +122,9 @@ module InetOverlayHost
                 @display("p=168,397");
         }
     connections allowunconnected:
+        networkLayer.ifOut++ --> lo0.upperLayerIn;
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+                
         tier1.to_lowerTier --> overlay.appIn if numTiers>0;
         tier1.from_lowerTier <-- overlay.appOut if numTiers>0;
         tier1.udpOut --> udp.appIn++ if numTiers>0;
@@ -156,8 +164,8 @@ module InetOverlayHost
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].upperLayerOut --> networkLayer.ifIn[i];
-            ppp[i].upperLayerIn <-- networkLayer.ifOut[i];
+            ppp[i].upperLayerOut --> networkLayer.ifIn++;
+            ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 
 }

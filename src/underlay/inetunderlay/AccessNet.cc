@@ -91,6 +91,7 @@ IPvXAddress AccessNet::addOverlayNode(cModule* node, bool migrate)
     Enter_Method("addOverlayNode()");
 
     TerminalInfo terminal;
+    memset(&terminal,0,sizeof(TerminalInfo));
     terminal.module = node;
     terminal.interfaceTable = IPvXAddressResolver().interfaceTableOf(node);
     terminal.remoteInterfaceTable = router.interfaceTable;
@@ -179,8 +180,7 @@ IPvXAddress AccessNet::addOverlayNode(cModule* node, bool migrate)
         k++;
 
     cModuleType* pppInterfaceModuleType = cModuleType::get("inet.linklayer.ppp.PPPInterface");
-    terminal.remotePPPInterface = pppInterfaceModuleType->
-    create("ppp", router.module, 0, k);
+    terminal.remotePPPInterface = pppInterfaceModuleType->create("ppp", router.module, 0, k);
 
 
     //
@@ -230,21 +230,8 @@ IPvXAddress AccessNet::addOverlayNode(cModule* node, bool migrate)
     cGate* ipIn = firstUnusedGate(ipModule, "queueIn");
     netwInGate->connectTo(ipIn);
 
-    if(useIPv6) {
-        cGate* ipOut = firstUnusedGate(ipModule, "queueOut");
-        ipOut->connectTo(netwOutGate);
-    }
-
-#ifdef _ORIG_INET
-    cModule* arpModule = router.module->getSubmodule("networkLayer")->getSubmodule("arp"); //comment out for speed-hack
-
-    cGate* arpOut = firstUnusedGate(arpModule, "nicOut"); //comment out for speed-hack
-
-    //cGate* ipOut = firstUnusedGate(ipModule, "queueOut"); //comment out for speed-hack
-    cGate* ipOut = ipModule->gate("queueOut");
-
-    arpOut->connectTo(netwOutGate);    //comment out for speed-hack
-#endif
+    cGate* ipOut = firstUnusedGate(ipModule, "queueOut");
+    ipOut->connectTo(netwOutGate);
 
     //
     // Start ppp interface modules
@@ -263,8 +250,18 @@ IPvXAddress AccessNet::addOverlayNode(cModule* node, bool migrate)
         }
     }
 
-    terminal.remoteInterfaceEntry = router.interfaceTable->getInterface(
-            router.interfaceTable->getNumInterfaces() - 1);
+    terminal.remoteInterfaceEntry = NULL;
+    for (int i = 0; i < router.interfaceTable->getNumInterfaces(); i++)
+    {
+        InterfaceEntry *ie = router.interfaceTable->getInterface(i);
+        if (ie->getInterfaceModule() == terminal.remotePPPInterface || ie->getInterfaceModule()->getParentModule() == terminal.remotePPPInterface)
+        {
+            terminal.remoteInterfaceEntry = ie;
+        }
+    }
+    if (terminal.remoteInterfaceEntry == NULL)
+        opp_error("interface not found");
+    // terminal.remoteInterfaceEntry = router.interfaceTable->getInterface(router.interfaceTable->getNumInterfaces() - 1);
     terminal.interfaceEntry = terminal.interfaceTable->getInterfaceByName("ppp0");
 
 
@@ -377,22 +374,44 @@ cModule* AccessNet::removeOverlayNode(int ID)
 
     if(node == NULL) return NULL;
 
+    // remove associated interface table entry
     cModule* ppp = terminal.remotePPPInterface;
+    cModule *piface = ppp->getSubmodule("ppp");
+    InterfaceEntry *ie = NULL;
+    for (int i = 0; i < router.interfaceTable->getNumInterfaces();i++)
+    {
+        InterfaceEntry *ieAux = router.interfaceTable->getInterface(i);
+        if(ieAux->getInterfaceModule() == piface)
+            ie = ieAux;
+    }
+
+    if (ie)
+        router.interfaceTable->deleteInterface(ie);
+    else
+        router.interfaceTable->deleteInterface(terminal.remoteInterfaceEntry);
 
     // disconnect terminal
     node->gate("pppg$o", 0)->disconnect();
     node->gate("pppg$i", 0)->getPreviousGate()->disconnect();
 
+
+
+
+
     // disconnect ip and arp modules
-    ppp->gate("netwIn")->getPathStartGate()->disconnect();
-    ppp->gate("netwOut")->getNextGate()->disconnect();
+
+    cGate *gateAux = ppp->gate("upperLayerIn")->getPathStartGate();
+    if (gateAux && gateAux->getNextGate())
+    {
+        gateAux->getNextGate()->disconnect();
+    }
+    gateAux->disconnect();
+    ppp->gate("upperLayerOut")->getNextGate()->disconnect();
+    ppp->gate("upperLayerOut")->disconnect();
 
     // remove associated ppp interface module
     ppp->callFinish();
     ppp->deleteModule();
-
-    // remove associated interface table entry
-    router.interfaceTable->deleteInterface(terminal.remoteInterfaceEntry);
 
     // remove routing entries //TODO: IPv6
     if (!useIPv6) {
@@ -468,9 +487,11 @@ cGate* firstUnusedGate(cModule* owner, const char* name, cGate::Type type)
         }
     }
 
-    owner->setGateSize(name, index + 2);
-    return type == cGate::NONE ? owner->gate(name, index + 1) : owner->gateHalf(name, type, index + 1);
+    owner->setGateSize(name, index + 1);
+    return type == cGate::NONE ? owner->gate(name, index) : owner->gateHalf(name, type, index);
 }
+
+
 
 IPvXAddress AccessNet::getAssignedPrefix(IInterfaceTable* ift)
 {

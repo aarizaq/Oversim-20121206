@@ -26,6 +26,7 @@ import inet.networklayer.ipv4.RoutingTable;
 import inet.nodes.inet.NetworkLayer;
 import oversim.common.IPacketParser;
 import oversim.underlay.singlehostunderlay.TunOutDevice;
+import inet.linklayer.loopback.LoopbackInterface;
 
 
 //
@@ -67,6 +68,9 @@ module TunOutRouter
                 ifIn[sizeof(pppg)+1];
                 ifOut[sizeof(pppg)+1];
         }
+        lo0: LoopbackInterface {
+            @display("p=90,195");
+        }
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
                 @display("p=90,257,row,110;q=l2queue");
@@ -76,14 +80,17 @@ module TunOutRouter
                 @display("p=145,257,row,110;q=l2queue");
         }
     connections allowunconnected:
+        networkLayer.ifOut++ --> lo0.upperLayerIn;
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].upperLayerOut --> networkLayer.ifIn[i];
-            ppp[i].upperLayerIn <-- networkLayer.ifOut[i];
+            ppp[i].upperLayerOut --> networkLayer.ifIn++;
+            ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 
-        tunDev.netwOut --> networkLayer.ifIn[sizeof(pppg)];
-        tunDev.netwIn <-- networkLayer.ifOut[sizeof(pppg)];
+        tunDev.netwOut --> networkLayer.ifIn++;
+        tunDev.netwIn <-- networkLayer.ifOut++;
 }
 

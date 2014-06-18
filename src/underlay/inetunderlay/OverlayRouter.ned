@@ -28,6 +28,7 @@ import inet.networklayer.ipv4.RoutingTable;
 import inet.networklayer.common.InterfaceTable;
 import inet.linklayer.ppp.PPPInterface;
 import inet.base.NotificationBoard;
+import inet.linklayer.loopback.LoopbackInterface;
 
 
 //
@@ -66,7 +67,7 @@ module OverlayRouter
                 routerId = "auto";
                 routingFile = routingFile;    // use predefined routing file if given
                 @display("p=84,348");
-        }
+        }        
         tier3: <tier3Type> like ITier {
             parameters:
                 @display("p=48,64");
@@ -99,6 +100,9 @@ module OverlayRouter
                 ifIn[sizeof(pppg)+sizeof(ethg)];
                 ifOut[sizeof(pppg)+sizeof(ethg)];
         }
+        lo0: LoopbackInterface {
+            @display("p=78,406");
+        }        
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
                 @display("p=282,422,row,90;q=txQueue");
@@ -117,6 +121,9 @@ module OverlayRouter
                 @display("p=168,348");
         }
     connections allowunconnected:
+        networkLayer.ifOut++ --> lo0.upperLayerIn;
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+        
         tier1.to_lowerTier --> overlay.appIn if numTiers>0;
         tier1.from_lowerTier <-- overlay.appOut if numTiers>0;
         tier1.udpOut --> udp.appIn++ if numTiers>0;
@@ -156,8 +163,8 @@ module OverlayRouter
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].upperLayerOut --> networkLayer.ifIn[i];
-            ppp[i].upperLayerIn <-- networkLayer.ifOut[i];
+            ppp[i].upperLayerOut --> networkLayer.ifIn++;
+            ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 
 }

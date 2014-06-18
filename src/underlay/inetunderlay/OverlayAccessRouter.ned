@@ -29,7 +29,7 @@ import inet.networklayer.common.InterfaceTable;
 import inet.linklayer.ppp.PPPInterface;
 import inet.linklayer.ethernet.EthernetInterface;
 import inet.base.NotificationBoard;
-
+import inet.linklayer.loopback.LoopbackInterface;
 
 //
 // Access router that participates in the overlay
@@ -106,13 +106,16 @@ module OverlayAccessRouter
                 ifIn[sizeof(pppg)+sizeof(ethg)];
                 ifOut[sizeof(pppg)+sizeof(ethg)];
         }
+        lo0: LoopbackInterface {
+            @display("p=230,340");
+        }
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
-                @display("p=290,414,row,90;q=txQueue;i=block/ifcard");
+                @display("p=321,414,row,90;q=txQueue;i=block/ifcard");
         }
         eth[sizeof(ethg)]: EthernetInterface {
             parameters:
-                @display("p=240,414,row,110;q=queue;i=block/ifcard");
+                @display("p=218,414,row,110;q=queue;i=block/ifcard");
         }
         neighborCache: NeighborCache {
             parameters:
@@ -127,6 +130,10 @@ module OverlayAccessRouter
                 @display("p=168,402");
         }
     connections allowunconnected:
+
+        networkLayer.ifOut++ --> lo0.upperLayerIn;
+        lo0.upperLayerOut --> networkLayer.ifIn++;
+
         tier1.to_lowerTier --> overlay.appIn if numTiers>0;
         tier1.from_lowerTier <-- overlay.appOut if numTiers>0;
         tier1.udpOut --> udp.appIn++ if numTiers>0;
@@ -166,14 +173,14 @@ module OverlayAccessRouter
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
-            ppp[i].upperLayerOut --> networkLayer.ifIn[i];
-            ppp[i].upperLayerIn <-- networkLayer.ifOut[i];
+            ppp[i].upperLayerOut --> networkLayer.ifIn++;
+            ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 
         for i=0..sizeof(ethg)-1 {
             ethg[i] <--> eth[i].phys;
-            eth[i].upperLayerOut --> networkLayer.ifIn[sizeof(pppg)+i];
-            eth[i].upperLayerIn <-- networkLayer.ifOut[sizeof(pppg)+i];
+            eth[i].upperLayerOut --> networkLayer.ifIn++;
+            eth[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 }
 
