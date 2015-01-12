@@ -2055,7 +2055,7 @@ void BaseOverlay::registerComp(CompType compType, cModule *module)
         }
     }
 
-    compModuleList[compType] = make_pair<cModule*, cGate*>(module, gate);
+    compModuleList[compType] = std::make_pair(module, gate);
 }
 
 cModule* BaseOverlay::getCompModule(CompType compType)

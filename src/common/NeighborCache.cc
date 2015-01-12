@@ -70,6 +70,9 @@ std::ostream& operator<<(std::ostream& os,
 
 Define_Module(NeighborCache);
 
+const double NeighborCache::RTT_TIMEOUT_ADJUSTMENT = 1.3;
+const double NeighborCache::NCS_TIMEOUT_CONSTANT = 0.350;
+
 void NeighborCache::initializeApp(int stage)
 {
     if (stage == MAX_STAGE_COMPONENTS) {

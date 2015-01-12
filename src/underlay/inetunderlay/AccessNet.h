@@ -35,6 +35,7 @@ class IRoutingTable;
 class RoutingTable6;
 class IPv4Route;
 class IPv6Route;
+class NotificationBoard;
 
 /**
  * Structure to manipulate IPv6 addresses easily
@@ -72,6 +73,7 @@ public:
     IRoutingTable* routingTable; //!< pointer to routing table of this node
     RoutingTable6* routingTable6;
     simtime_t createdAt; //!< creation timestamp
+    NotificationBoard *nb;
 
     /**
      * Stream out

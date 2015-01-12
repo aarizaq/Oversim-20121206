@@ -176,8 +176,8 @@ private:
     void pingTimeout(PingCall* call, const TransportAddress& dest,
                               cPolymorphic* context, int rpcId);
 
-    static const double RTT_TIMEOUT_ADJUSTMENT = 1.3;
-    static const double NCS_TIMEOUT_CONSTANT = 0.350;
+    static const double RTT_TIMEOUT_ADJUSTMENT;
+    static const double NCS_TIMEOUT_CONSTANT;
 
     void prepareOverlay();
     void setCbrNodeId();

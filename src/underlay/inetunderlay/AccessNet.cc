@@ -59,7 +59,7 @@ void AccessNet::initialize(int stage)
         router.routingTable = IPvXAddressResolver().routingTableOf(getParentModule());
         router.IPAddress = IPvXAddressResolver().addressOf(getParentModule());
     }
-
+    router.nb = IPvXAddressResolver().notificationBoardOf(getParentModule());
     channelTypesTx = cStringTokenizer(par("channelTypes"), " ").asVector();
     channelTypesRx = cStringTokenizer(par("channelTypesRx"), " ").asVector();
     
@@ -386,16 +386,20 @@ cModule* AccessNet::removeOverlayNode(int ID)
     }
 
     if (ie)
+    {
+        router.nb->unsubscribe((INotifiable*)ie,NF_INTERFACE_DELETED);
+        router.nb->unsubscribe((INotifiable*)terminal.remoteInterfaceEntry,NF_INTERFACE_DELETED);
         router.interfaceTable->deleteInterface(ie);
+    }
     else
+    {
+        router.nb->unsubscribe((INotifiable*)terminal.remoteInterfaceEntry,NF_INTERFACE_DELETED);
         router.interfaceTable->deleteInterface(terminal.remoteInterfaceEntry);
+    }
 
     // disconnect terminal
     node->gate("pppg$o", 0)->disconnect();
     node->gate("pppg$i", 0)->getPreviousGate()->disconnect();
-
-
-
 
 
     // disconnect ip and arp modules

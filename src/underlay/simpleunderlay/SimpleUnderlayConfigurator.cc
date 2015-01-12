@@ -22,6 +22,10 @@
 
 #include <omnetpp.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 #if !defined(__APPLE__) &&  !defined(_WIN32) && !defined(__ANDROID__)
 #include <malloc.h>
 #endif

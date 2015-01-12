@@ -4,7 +4,7 @@
 #include <cstdlib>
 #include <errno.h>
 
-#ifdef WIN32
+#if defined(_WIN32) || defined(_WIN32) || defined(__MINGW32__) || defined(_WIN64)
 #include <winsock2.h>
 #include <stdlib.h>
 #include <stdio.h>
