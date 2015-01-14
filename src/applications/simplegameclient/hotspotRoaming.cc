@@ -23,6 +23,9 @@
 
 #include "hotspotRoaming.h"
 #include "StringConvert.h"
+#ifndef M_PI
+#define M_PI        3.14159265358979323846
+#endif
 
 hotspotRoaming::hotspotRoaming(double areaDimension, double speed, NeighborMap *Neighbors, GlobalCoordinator* coordinator, CollisionList* CollisionRect)
               :MovementGenerator(areaDimension, speed, Neighbors, coordinator, CollisionRect)

@@ -6,7 +6,7 @@
 typedef int socklen_t;
 #endif
 
-#include <errno.h>
+
 
 #if defined(_WIN32) || defined(_WIN32) || defined(__MINGW32__) || defined(_WIN64)
 
@@ -59,6 +59,7 @@ static const int STUN_SOCKET_ERROR = -1;
 inline int stunclosesocket( Socket fd ) { return closesocket(fd); };
 
 #else
+#include <errno.h>
 
 typedef int Socket;
 static const Socket STUN_INVALID_SOCKET = -1;
