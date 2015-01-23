@@ -33,6 +33,7 @@
 #include <IPvXAddressResolver.h>
 #include <IPv4InterfaceData.h>
 #include <IPv6InterfaceData.h>
+#include <MACBase.h>
 
 #include "AccessNet.h"
 
@@ -387,14 +388,19 @@ cModule* AccessNet::removeOverlayNode(int ID)
 
     if (ie)
     {
-        router.nb->unsubscribe((INotifiable*)ie,NF_INTERFACE_DELETED);
-        router.nb->unsubscribe((INotifiable*)terminal.remoteInterfaceEntry,NF_INTERFACE_DELETED);
+
+        MACBase *iface = check_and_cast<MACBase*>(ie->getInterfaceModule());
+        MACBase *iface2 = check_and_cast<MACBase*>(terminal.remoteInterfaceEntry->getInterfaceModule());
+
         router.interfaceTable->deleteInterface(ie);
+        router.nb->unsubscribe(iface,NF_INTERFACE_DELETED);
+        router.nb->unsubscribe(iface2,NF_INTERFACE_DELETED);
     }
     else
     {
-        router.nb->unsubscribe((INotifiable*)terminal.remoteInterfaceEntry,NF_INTERFACE_DELETED);
+        MACBase *iface = check_and_cast<MACBase*>(terminal.remoteInterfaceEntry->getInterfaceModule());
         router.interfaceTable->deleteInterface(terminal.remoteInterfaceEntry);
+        router.nb->unsubscribe(iface,NF_INTERFACE_DELETED);
     }
 
     // disconnect terminal
