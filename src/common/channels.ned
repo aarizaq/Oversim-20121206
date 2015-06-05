@@ -6,6 +6,7 @@ channel simple_ethernetline extends ned.DatarateChannel
     parameters:
         delay = 0ms;
         datarate = 10Mbps;
+        ber = 0;
 }
 
 // Ethernet channel with packet loss for SimpleUnderlay
@@ -23,6 +24,7 @@ channel simple_dsl extends ned.DatarateChannel
     parameters:
         delay = 20ms;
         datarate = 1Mbps;
+        ber = 0;
 }
 
 // DSL channel with packet loss for SimpleUnderlay
@@ -40,6 +42,7 @@ channel simple_dialup_56k extends ned.DatarateChannel
     parameters:
         delay = 0ms;
         datarate = 56kbps;
+        ber = 0;
 }
 
 // Fiberline channel for InetUnderlay
@@ -48,6 +51,7 @@ channel inet_fiberline extends ned.DatarateChannel
     parameters:
         delay = 1ms;
         datarate = 10Gbps;
+        ber = 0;
 }
 
 // Ethernet channel for InetUnderlay
@@ -56,6 +60,7 @@ channel inet_ethernetline extends ned.DatarateChannel
     parameters:
         delay = 10ms;
         datarate = 10Mbps;
+        ber = 0;
 }
 
 // Ethernet channel with packet loss for InetUnderlay
@@ -73,6 +78,7 @@ channel inet_dsl extends ned.DatarateChannel
     parameters:
         delay = 30ms;
         datarate = 1Mbps;
+        ber = 0;
 }
 
 // DSL channel with packet loss for InetUnderlay
@@ -90,4 +96,5 @@ channel inet_dialup_56k extends ned.DatarateChannel
     parameters:
         delay = 220ms;
         datarate = 56kbps;
+        ber = 0;
 }
