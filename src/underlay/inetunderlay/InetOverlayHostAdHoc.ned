@@ -16,6 +16,7 @@
 
 package oversim.underlay.inetunderlay;
 
+import inet.networklayer.IManetRouting;
 import inet.base.NotificationBoard;
 import inet.linklayer.ppp.PPPInterface;
 import inet.networklayer.common.InterfaceTable;
@@ -28,6 +29,7 @@ import oversim.common.CryptoModule;
 import oversim.common.IOverlay;
 import oversim.common.ITier;
 import oversim.common.NeighborCache;
+import inet.linklayer.IWirelessNic;
 import inet.linklayer.loopback.LoopbackInterface;
 
 
@@ -36,7 +38,7 @@ import inet.linklayer.loopback.LoopbackInterface;
 //
 // @author Markus Mauch, Bernhard Heep
 //
-module InetOverlayHost
+module InetOverlayHostAdHoc
 {
     parameters:
         string overlayType; // overlay protocol compound module to use
@@ -45,16 +47,25 @@ module InetOverlayHost
         string tier3Type; // tier 3 module to use
         int numTiers; // number of tiers
         string routingFile = default("");
-        bool IPForward = default(false);
+        bool IPForward = default(true);
+        wlan[*].mgmtType = default("Ieee80211MgmtAdhoc");  // use adhoc management
+        string routingProtocol @enum("AODVUU","DYMOUM","DYMO","DSRUU","OLSR","OLSR_ETX","DSDV_2","Batman") = default("");  // used mobile routing protocol. see: inet.networklayer.manetrouting
+        int numRadios = default(1);               // the number of radios in the router. by default no wireless
+
         @node;
         @display("bgb=537,472;i=device/wifilaptop_l;i2=block/circle_s");
     gates:
+        input radioIn[numRadios] @directIn;
         inout pppg[]; // gates from router
         inout ethg[]; // placeholder for zero-size vector
         input overlayNeighborArrowIn[]; // incoming gate for visualizing overlay neighborship with connection arrows
         output overlayNeighborArrowOut[]; // incoming gate for visualizing overlay neighborship with connection arrows
 
     submodules:
+        manetrouting: <routingProtocol> like IManetRouting if routingProtocol != "" {
+            @display("p=479,311");
+        }
+
         notificationBoard: NotificationBoard {
             parameters:
                 @display("p=68,230");
@@ -103,23 +114,27 @@ module InetOverlayHost
                 ifOut[sizeof(pppg)+sizeof(ethg)];
         }
         lo0: LoopbackInterface {
-            @display("p=250,397");
+            @display("p=239,406");
         }
         ppp[sizeof(pppg)]: PPPInterface {
             parameters:
-                @display("p=374,414,row,90;q=txQueue");
+                @display("p=460,406,row,90;q=txQueue");
+        }
+        wlan[numRadios]: <default("Ieee80211Nic")> like IWirelessNic {
+            parameters:
+                @display("p=315,414,row,60;q=queue");
         }
         neighborCache: NeighborCache {
             parameters:
-                @display("p=168,230");
+                @display("p=149,230");
         }
         bootstrapList: BootstrapList {
             parameters:
-                @display("p=168,311");
+                @display("p=143,311");
         }
         cryptoModule: CryptoModule {
             parameters:
-                @display("p=168,397");
+                @display("p=143,397");
         }
     connections allowunconnected:
         networkLayer.ifOut++ --> lo0.upperLayerIn;
@@ -161,6 +176,12 @@ module InetOverlayHost
         tcp.ipOut --> networkLayer.transportIn++;
         tcp.ipIn <-- networkLayer.transportOut++;
 
+        for i=0..sizeof(radioIn)-1 {
+            radioIn[i] --> { @display("m=s"); } --> wlan[i].radioIn;
+            wlan[i].upperLayerOut --> networkLayer.ifIn++;
+            wlan[i].upperLayerIn <-- networkLayer.ifOut++;
+        }
+
         // connections to network outside
         for i=0..sizeof(pppg)-1 {
             pppg[i] <--> ppp[i].phys;
@@ -168,5 +189,7 @@ module InetOverlayHost
             ppp[i].upperLayerIn <-- networkLayer.ifOut++;
         }
 
+        networkLayer.transportOut++ --> manetrouting.from_ip if routingProtocol != "";
+        networkLayer.transportIn++ <-- manetrouting.to_ip if routingProtocol != "";
 }
 
