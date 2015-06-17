@@ -31,6 +31,7 @@ import oversim.common.ITier;
 import oversim.common.NeighborCache;
 import inet.linklayer.IWirelessNic;
 import inet.linklayer.loopback.LoopbackInterface;
+import inet.mobility.contract.IMobility;
 
 
 //
@@ -51,7 +52,7 @@ module InetOverlayHostAdHoc
         wlan[*].mgmtType = default("Ieee80211MgmtAdhoc");  // use adhoc management
         string routingProtocol @enum("AODVUU","DYMOUM","DYMO","DSRUU","OLSR","OLSR_ETX","DSDV_2","Batman") = default("");  // used mobile routing protocol. see: inet.networklayer.manetrouting
         int numRadios = default(1);               // the number of radios in the router. by default no wireless
-
+        string mobilityType = default(numRadios > 0 ? "StationaryMobility" : "");
         @node;
         @display("bgb=537,472;i=device/wifilaptop_l;i2=block/circle_s");
     gates:
@@ -74,6 +75,13 @@ module InetOverlayHostAdHoc
             parameters:
                 @display("p=68,311");
         }
+                // optional mobility module. Required only if wireless cards are present
+        mobility: <mobilityType> like IMobility if mobilityType != "" {
+            parameters:
+                @display("p=68,181");
+        }
+
+
         routingTable: RoutingTable {
             parameters:
                 IPForward = IPForward; // true if ip packets should be forwarded
