@@ -1,0 +1,81 @@
+version 2
+run CDN-0-20161122-21:00:51-9976
+attr configname CDN
+attr datetime 20161122-21:00:51
+attr experiment CDN
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network oversim.underlay.inetunderlay.InetUnderlayNetwork
+attr processid 9976
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 8  InetUnderlayNetwork.backboneRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 9  InetUnderlayNetwork.backboneRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 19  InetUnderlayNetwork.backboneRouter[0].ppp[1].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 20  InetUnderlayNetwork.backboneRouter[0].ppp[1].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 35  InetUnderlayNetwork.accessRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 36  InetUnderlayNetwork.accessRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 56  InetUnderlayNetwork.overlayAccessRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 57  InetUnderlayNetwork.overlayAccessRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 91  InetUnderlayNetwork.CDNP2PTracker[0].ppp[1].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 92  InetUnderlayNetwork.CDNP2PTracker[0].ppp[1].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 80  InetUnderlayNetwork.overlayTerminal[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 81  InetUnderlayNetwork.overlayTerminal[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 123  InetUnderlayNetwork.CDNP2PTracker[0].ppp[2].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 124  InetUnderlayNetwork.CDNP2PTracker[0].ppp[2].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 112  InetUnderlayNetwork.overlayTerminal[1].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 113  InetUnderlayNetwork.overlayTerminal[1].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+8	0	0	0
+9	0	0	0
+19	0	0	0
+20	0	0	0
+35	0	0	0
+36	0	0	0
+56	0	0	0
+57	0	0	0
+80	26	0.098459035	0
+81	26	0.098459035	0
+91	26	0.098459035	0
+92	26	0.098459035	0
+112	47	1.391225338	0
+113	47	1.391225338	0
+123	47	1.391225338	0
+124	47	1.391225338	0

@@ -1,0 +1,119 @@
+version 2
+run ChordInet-0-20161122-21:02:29-11912
+attr configname ChordInet
+attr datetime 20161122-21:02:29
+attr experiment ChordInet
+attr inifile omnetpp.ini
+attr iterationvars ""
+attr iterationvars2 $repetition=0
+attr measurement ""
+attr network oversim.underlay.inetunderlay.InetUnderlayNetwork
+attr processid 11912
+attr repetition 0
+attr replication #0
+attr resultdir results
+attr runnumber 0
+attr seedset 0
+
+vector 8  InetUnderlayNetwork.backboneRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 9  InetUnderlayNetwork.backboneRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 19  InetUnderlayNetwork.backboneRouter[0].ppp[1].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 20  InetUnderlayNetwork.backboneRouter[0].ppp[1].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 35  InetUnderlayNetwork.accessRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 36  InetUnderlayNetwork.accessRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 56  InetUnderlayNetwork.overlayAccessRouter[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 57  InetUnderlayNetwork.overlayAccessRouter[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 91  InetUnderlayNetwork.accessRouter[0].ppp[1].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 92  InetUnderlayNetwork.accessRouter[0].ppp[1].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 80  InetUnderlayNetwork.overlayTerminal[0].ppp[0].queue  queueLength:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "queue length, vector"
+vector 81  InetUnderlayNetwork.overlayTerminal[0].ppp[0].ppp  txState:vector  ETV
+attr interpolationmode  sample-hold
+attr title  "tx state, vector"
+vector 67  InetUnderlayNetwork.overlayTerminal[0].udp  sentPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  sentPk
+attr title  "packets sent, vector(packetBytes)"
+vector 77  InetUnderlayNetwork.overlayTerminal[0].ppp[0].queue  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr title  "received packets, vector(packetBytes)"
+vector 79  InetUnderlayNetwork.overlayTerminal[0].ppp[0].queue  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time, vector"
+vector 86  InetUnderlayNetwork.overlayTerminal[0].ppp[0].ppp  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 82  InetUnderlayNetwork.overlayTerminal[0].ppp[0].ppp  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets transmitted, vector(packetBytes)"
+vector 94  InetUnderlayNetwork.accessRouter[0].ppp[1].ppp  rxPkOk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  rxPkOk
+attr title  "packets received OK, vector(packetBytes)"
+vector 98  InetUnderlayNetwork.accessRouter[0].ppp[1].ppp  passedUpPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToUpper
+attr title  "packets passed to higher layer, vector(packetBytes)"
+vector 32  InetUnderlayNetwork.accessRouter[0].ppp[0].queue  rcvdPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr title  "received packets, vector(packetBytes)"
+vector 34  InetUnderlayNetwork.accessRouter[0].ppp[0].queue  queueingTime:vector  ETV
+attr interpolationmode  none
+attr title  "queueing time, vector"
+vector 41  InetUnderlayNetwork.accessRouter[0].ppp[0].ppp  rcvdPkFromHL:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetReceivedFromUpper
+attr title  "packets received from higher layer, vector(packetBytes)"
+vector 37  InetUnderlayNetwork.accessRouter[0].ppp[0].ppp  txPk:vector(packetBytes)  ETV
+attr interpolationmode  none
+attr source  packetSentToLower
+attr title  "packets transmitted, vector(packetBytes)"
+8	0	0	0
+9	0	0	0
+19	0	0	0
+20	0	0	0
+32	55	0.129419035	113
+34	55	0.129419035	0
+35	0	0	0
+36	0	0	0
+36	56	0.129419035	1
+37	56	0.129419035	120
+41	56	0.129419035	113
+56	0	0	0
+57	0	0	0
+67	48	0.098459035	93
+77	50	0.098459035	113
+79	50	0.098459035	0
+80	29	0.098459035	0
+81	29	0.098459035	0
+81	51	0.098459035	1
+81	52	0.099419035	0
+82	51	0.098459035	120
+86	51	0.098459035	113
+91	29	0.098459035	0
+92	29	0.098459035	0
+94	53	0.129419035	120
+98	53	0.129419035	113
