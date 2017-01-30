@@ -61,7 +61,7 @@ network InetUnderlayNetwork2
                 tier1Type = tier1Type;    // the application on top off the overly used in the simulation
                 tier2Type = tier2Type;    // tier 2 module to use
                 tier3Type = tier3Type;    // tier 3 module to use
-                @display("i=device/server2,gray,30;i2=block/circle_s");
+                @display("i=device/server2,gray,30;i2=block/circle_s;p=181,317");
         }
         overlayBackboneRouter[overlayBackboneRouterNum]: OverlayRouter {
             parameters:
@@ -69,7 +69,7 @@ network InetUnderlayNetwork2
                 tier1Type = tier1Type;    // the application on top off the overly used in the simulation
                 tier2Type = tier2Type;    // tier 2 module to use
                 tier3Type = tier3Type;    // tier 3 module to use
-                @display("i=device/server2;i2=block/circle_s");
+                @display("i=device/server2;i2=block/circle_s;p=269,212");
         }
         churnGenerator[0]: ChurnGenerator {
             @display("p=70,240,column");
@@ -89,15 +89,14 @@ network InetUnderlayNetwork2
         backboneRouter[0].pppg$i++ <-- inet_fiberline <-- outRouter[0].pppg$o++ if outRouterNum>0;
 
         // connect backboneRouters with other backboneRouters
+        // connect backboneRouters with other backboneRouters
         for i=0..backboneRouterNum-1, for j=0..backboneRouterNum-1 {
-            backboneRouter[i].pppg$o++ --> inet_fiberline --> backboneRouter[j].pppg$i++ if i<j&&uniform2(0, 1, i, 1)<=connectivity;
-            backboneRouter[i].pppg$i++ <-- inet_fiberline <-- backboneRouter[j].pppg$o++ if i<j&&uniform2(0, 1, i, 0)<=connectivity;
+            backboneRouter[i].pppg++ <--> inet_fiberline <--> backboneRouter[j].pppg++ if i<j&&uniform2(0, 1, i, 1)<=connectivity;
         }
 
         // connect overlayBackboneRouters with other overlayBackboneRouters
         for i=0..overlayBackboneRouterNum-1, for j=0..overlayBackboneRouterNum-1 {
-            overlayBackboneRouter[i].pppg$o++ --> inet_fiberline --> overlayBackboneRouter[j].pppg$i++ if i<j&&uniform2(0, 1, i, 0)<=connectivity;
-            overlayBackboneRouter[i].pppg$i++ <-- inet_fiberline <-- overlayBackboneRouter[j].pppg$o++ if i<j&&uniform2(0, 1, i, 0)<=connectivity;
+            overlayBackboneRouter[i].pppg++ <--> inet_fiberline <--> overlayBackboneRouter[j].pppg++ if i<j&&uniform2(0, 1, i, 0)<=connectivity;
         }
 
         //
@@ -105,8 +104,17 @@ network InetUnderlayNetwork2
         //
         // connect accessRouters with backboneRouters
         for i=0..accessRouterNum-1 {
-            accessRouter[i].pppg$o++ --> inet_fiberline --> backboneRouter[intuniform2(0, backboneRouterNum-1, 0, 1)].pppg$i++ if uniform2(0, 1, i, 1)>overlayBackboneRouterNum/(overlayBackboneRouterNum+backboneRouterNum);
-            accessRouter[i].pppg$i++ <-- inet_fiberline <-- backboneRouter[intuniform2(0, backboneRouterNum-1, 0, 0)].pppg$o++ if uniform2(0, 1, i, 0)>overlayBackboneRouterNum/(overlayBackboneRouterNum+backboneRouterNum);
+            accessRouter[i].pppg++ <--> inet_fiberline <--> backboneRouter[intuniform2(0, backboneRouterNum-1, 0, 1)].pppg++ if uniform2(0, 1, i, 1)>overlayBackboneRouterNum/(overlayBackboneRouterNum+backboneRouterNum);
         }
+
+        // connect accessRouters with backboneRouters
+        for i=0..overlayAccessRouterNum-1, if  overlayBackboneRouterNum > 0 {
+            overlayAccessRouter[i].pppg++ <--> inet_fiberline <--> overlayBackboneRouter[intuniform2(0, overlayBackboneRouterNum-1, 0, 1)].pppg++ if uniform2(0, 1, i, 1)>overlayBackboneRouterNum/(overlayBackboneRouterNum+backboneRouterNum);
+        }
+
+        for i=0..overlayAccessRouterNum-1, if  overlayBackboneRouterNum == 0 {
+            overlayAccessRouter[i].pppg++ <--> inet_fiberline <--> backboneRouter[intuniform2(0, backboneRouterNum-1, 0, 1)].pppg++ if uniform2(0, 1, i, 1)>overlayBackboneRouterNum/(overlayBackboneRouterNum+backboneRouterNum);
+        }
+
 
 }
